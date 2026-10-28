@@ -13,6 +13,13 @@ class AcademicPortalTests(TestCase):
         self.grade = Grade.objects.create(enrollment=self.enrollment, score="16.50", assessment="Examen")
         self.payment = Payment.objects.create(student=self.student, amount="50000.00", reason="Scolarité", reference="PAY-001", status=Payment.Status.PAID)
 
+    def test_administrator_role_can_open_admin_without_superuser(self):
+        admin_user = User.objects.create_user(username="gestionnaire", password="test-pass-123", role=User.Role.ADMIN)
+        self.assertTrue(admin_user.is_staff)
+        self.client.login(username="gestionnaire", password="test-pass-123")
+        response = self.client.get("/admin/")
+        self.assertEqual(response.status_code, 200)
+
     def test_login_and_dashboard(self):
         self.assertTrue(self.client.login(username="etudiant", password="test-pass-123"))
         response = self.client.get(reverse("dashboard"))
