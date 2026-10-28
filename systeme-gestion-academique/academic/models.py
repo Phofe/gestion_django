@@ -9,6 +9,10 @@ class User(AbstractUser):
         STUDENT = "STUDENT", "Étudiant"
     role = models.CharField(max_length=12, choices=Role.choices, default=Role.STUDENT)
 
+    def save(self, *args, **kwargs):
+        self.is_staff = self.is_superuser or self.role == self.Role.ADMIN
+        super().save(*args, **kwargs)
+
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile")
     student_number = models.CharField(max_length=30, unique=True)
