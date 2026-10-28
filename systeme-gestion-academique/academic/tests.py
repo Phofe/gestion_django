@@ -24,7 +24,7 @@ class AcademicPortalTests(TestCase):
         self.client.login(username="etudiant", password="test-pass-123")
         response = self.client.get(reverse("grades"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "16.50")
+        self.assertContains(response, "16,50")
         self.assertEqual(self.client.get(reverse("students")).status_code, 403)
 
     def test_student_can_download_transcript_and_certificate(self):
