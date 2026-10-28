@@ -81,7 +81,7 @@ def grades(request):
         items = items.filter(enrollment__student__user=request.user)
     elif request.user.role == User.Role.TEACHER:
         items = items.filter(enrollment__course__teacher__user=request.user)
-    return render(request, "academic/list.html", {"title": "Notes", "items": items, "columns": ["enrollment", "assessment", "score", "recorded_at"], "admin_link": "/admin/academic/grade/" if request.user.role in [User.Role.ADMIN, User.Role.TEACHER] or request.user.is_superuser else None})
+    return render(request, "academic/list.html", {"title": "Notes", "items": items, "columns": ["enrollment", "assessment", "score", "recorded_at"], "admin_link": "/admin/academic/grade/" if request.user.role == User.Role.ADMIN or request.user.is_superuser else None})
 
 @login_required
 def payments(request):
@@ -139,7 +139,9 @@ def transcript_pdf(request):
     profile = getattr(request.user, "student_profile", None)
     if request.user.role == User.Role.STUDENT and profile:
         qs = Grade.objects.filter(enrollment__student=profile).select_related("enrollment__course")
-    elif request.user.role in [User.Role.ADMIN, User.Role.TEACHER] or request.user.is_superuser:
+    elif request.user.role == User.Role.TEACHER and getattr(request.user, "teacher_profile", None):
+        qs = Grade.objects.filter(enrollment__course__teacher=request.user.teacher_profile).select_related("enrollment__course")
+    elif request.user.role == User.Role.ADMIN or request.user.is_superuser:
         qs = Grade.objects.select_related("enrollment__student__user", "enrollment__course")
         student_id = request.GET.get("student")
         if student_id:
