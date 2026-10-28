@@ -1,0 +1,29 @@
+name: Django checks
+on:
+  push:
+    paths:
+      - "systeme-gestion-academique/**"
+      - ".github/workflows/django.yml"
+  pull_request:
+    paths:
+      - "systeme-gestion-academique/**"
+      - ".github/workflows/django.yml"
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: systeme-gestion-academique
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: systeme-gestion-academique/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python manage.py check
+      - run: python manage.py makemigrations academic
+      - run: python manage.py migrate --noinput
+      - run: python manage.py test
