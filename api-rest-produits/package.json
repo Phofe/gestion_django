@@ -1,0 +1,17 @@
+{
+  "name": "api-rest-produits",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API REST de démonstration pour gérer un catalogue de produits",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
