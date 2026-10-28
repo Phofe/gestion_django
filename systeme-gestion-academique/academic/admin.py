@@ -20,6 +20,22 @@ class AcademicRoleAdminMixin:
 
 @admin.register(User)
 class AcademicUserAdmin(AcademicRoleAdminMixin, UserAdmin):
+    def get_fieldsets(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_fieldsets(request, obj)
+        if obj is None:
+            return (
+                (None, {"classes": ("wide",), "fields": ("username", "password1", "password2")}),
+                ("Informations personnelles", {"fields": ("first_name", "last_name", "email")}),
+                ("Profil académique", {"fields": ("role",)}),
+            )
+        return (
+            (None, {"fields": ("username",)}),
+            ("Informations personnelles", {"fields": ("first_name", "last_name", "email")}),
+            ("Compte", {"fields": ("is_active",)}),
+            ("Profil académique", {"fields": ("role",)}),
+        )
+
     fieldsets = UserAdmin.fieldsets + (("Profil académique", {"fields": ("role",)}),)
     add_fieldsets = UserAdmin.add_fieldsets + (("Profil académique", {"fields": ("role",)}),)
     list_display = ("username", "email", "first_name", "last_name", "role", "is_active")
