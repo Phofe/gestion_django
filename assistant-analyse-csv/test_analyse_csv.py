@@ -35,7 +35,7 @@ class AnalyseCsvTests(unittest.TestCase):
     def test_lit_csv_avec_point_virgule_et_bom(self):
         with tempfile.TemporaryDirectory() as dossier:
             chemin = Path(dossier) / "entree.csv"
-            chemin.write_text("\\ufeffnom;prix\\nStylo;12,5\\nCahier;20\\n", encoding="utf-8")
+            chemin.write_text("\ufeffnom;prix\nStylo;12,5\nCahier;20\n", encoding="utf-8")
             colonnes, lignes = lire_csv(chemin)
             self.assertEqual(colonnes, ["nom", "prix"])
             self.assertEqual(lignes[0], {"nom": "Stylo", "prix": "12,5"})
