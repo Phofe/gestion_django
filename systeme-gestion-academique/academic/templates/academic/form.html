@@ -1,0 +1,24 @@
+{% extends "academic/base.html" %}
+{% block title %}{{ title }} — CampusPilot{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block content %}
+<div class="panel form-panel">
+  <p class="muted">Les champs marqués obligatoires doivent être renseignés. Les règles métier sont vérifiées avant l'enregistrement.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}
+      <div class="field-row">
+        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span aria-hidden="true">*</span>{% endif %}</label>
+        {{ field }}
+        {% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}
+        {% for error in field.errors %}<p class="field-error" role="alert">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <div class="form-actions"><button class="button" type="submit">{% if is_edit %}Enregistrer les modifications{% else %}Enregistrer{% endif %}</button> <a class="button orange" href="{% url cancel_url %}">Annuler</a></div>
+  </form>
+</div>
+<style>
+.form-panel{max-width:760px}.field-row{display:grid;gap:7px;margin:17px 0}.field-row label{font-size:13px;font-weight:750}.form-control{width:100%;min-height:42px;padding:10px 12px;border:1px solid #cfd6cc;border-radius:8px;background:#fff;color:#202923}.form-control:focus{outline:3px solid #315b4530;border-color:#315b45}.check-input{width:18px;height:18px}.field-error,.form-errors{color:#9b2c20;background:#fff0ed;border:1px solid #efc1ba;padding:8px 10px;border-radius:7px;font-size:12px;margin:0}.help-text{color:#737a72}.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+</style>
+{% endblock %}
